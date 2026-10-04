@@ -3,9 +3,8 @@ defmodule Validacion do
   Validación de lotes.
   """
 
-  @doc """
-  Parametros como atributos del módulo.
-  """
+
+  # Parametros como atributos del módulo.
   @dia_minimo 1
   @dia_maximo 6
   @prendas_minimas 1

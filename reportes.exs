@@ -3,9 +3,7 @@ defmodule Reportes do
   Cálculo de los reportes de R1 a R8.
   """
 
-  @doc """
-  Lista de motivos de rechazo, definida como atributo del modulo.
-  """
+  # Lista de motivos de rechazo, definida como atributo del modulo.
   @motivos [
     :confeccionista_desconocido,
     :linea_desconocida,
