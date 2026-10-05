@@ -1,3 +1,6 @@
+# Parcial 1 - Programación III - Universidad del Quindío
+# Integrantes: Luisa Gómez, Juan Camilo Gordillo, Juan Esteban Mejia
+
 defmodule Util do
   @moduledoc """
   Funciones de apoyo.
@@ -90,4 +93,41 @@ defmodule Util do
   """
   def dividir(_dividendo, divisor) when divisor == 0, do: {:error, :division_por_cero}
   def dividir(dividendo, divisor), do: {:ok, dividendo / divisor}
+
+
+  @doc """
+  Suma las prendas de una lista de lotes agrupándolas por la clave que devuelva `clave_fn`.
+  Devuelve un mapa `clave => total_de_prendas`.
+
+  Ejemplo: `prendas_por(lotes, fn lote -> lote.dia end)` da `%{1 => 125, 2 => 90}`.
+  """
+  def prendas_por(lotes, clave_fn) do
+    lotes
+    |> Enum.group_by(clave_fn, fn lote -> lote.prendas end)
+    |> Map.new(fn {clave, prendas} -> {clave, Enum.sum(prendas)} end)
+  end
+
+  @doc """
+  Convierte la lista de confeccionistas en un mapa `codigo => nombre`,
+  para buscar nombres por código sin recorrer la lista.
+  """
+  def nombres_por_codigo(confeccionistas) do
+    Map.new(confeccionistas, fn confeccionista ->
+      {confeccionista.codigo, confeccionista.nombre}
+    end)
+  end
+
+  @doc """
+  Texto "CODIGO (Nombre)" para mostrar a un confeccionista.
+  Si el código no está en el mapa de nombres, usa "desconocido".
+  """
+  def etiqueta(codigo, nombres) do
+    "#{codigo} (#{Map.get(nombres, codigo, "desconocido")})"
+  end
+
+  @doc """
+  Convierte un booleano en "Sí" o "No".
+  """
+  def si_no(true), do: "Sí"
+  def si_no(false), do: "No"
 end
