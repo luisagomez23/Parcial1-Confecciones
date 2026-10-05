@@ -85,8 +85,12 @@ defmodule Liquidacion do
   @doc """
   Liquida a todos los confeccionistas, incluso a quienes no tienen lotes válidos.
   """
-  def liquidacion_confeccionistas(confeccionistas) do
+  def liquidar_todos(confeccionistas, lotes_validos) do
+    por_confeccionista = Enum.group_by(lotes_validos, & &1.confeccionista)
 
+    Enum.map(confeccionistas, fn c ->
+      liquidar(c, Map.get(por_confeccionista, c.codigo, []))
+    end)
   end
 
 end
