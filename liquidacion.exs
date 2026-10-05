@@ -30,12 +30,13 @@ defmodule Liquidacion do
   Bonificación del día según las prendas acumuladas ese día.
   """
   def bonificacion_dia(prendas) when prendas >= @prendas_para_bonificacion, do: @bonificacion_diaria
+  def bonificacion_dia(_prendas), do: 0
 
 
   @doc """
   Descuento por alquiler: solo si el confeccionista usa máquinas del taller.
   """
-  def descuento_alquiler(true, dias_trabajados) do dias_trabajados * @alquiler_por_dia
+  def descuento_alquiler(true, dias_trabajados), do: dias_trabajados * @alquiler_por_dia
   def descuento_alquiler(false, _dias_trabajados), do: 0
 
 
@@ -79,8 +80,6 @@ defmodule Liquidacion do
     }
   end
 
-  end
-
 
   @doc """
   Liquida a todos los confeccionistas, incluso a quienes no tienen lotes válidos.
@@ -89,7 +88,7 @@ defmodule Liquidacion do
     por_confeccionista = Enum.group_by(lotes_validos, & &1.confeccionista)
 
     Enum.map(confeccionistas, fn c ->
-      liquidar(c, Map.get(por_confeccionista, c.codigo, []))
+      liquidacion_confeccionista(c, Map.get(por_confeccionista, c.codigo, []))
     end)
   end
 

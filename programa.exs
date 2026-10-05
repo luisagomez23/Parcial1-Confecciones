@@ -1,3 +1,11 @@
+# Hecho con apoyo de IA (Claude).
+Code.require_file("datos.exs", __DIR__)
+Code.require_file("validacion.exs", __DIR__)
+Code.require_file("util.ex", __DIR__)
+Code.require_file("reportes.exs", __DIR__)
+Code.require_file("liquidacion.exs", __DIR__)
+
+
 defmodule Programa do
   @moduledoc """
   Carga los datos, valida los lotes e imprime los reportes.
@@ -19,7 +27,8 @@ defmodule Programa do
 
     {_validos, rechazados} = Validacion.separar_lotes(Datos.lotes(), confeccionistas, lineas)
 
-    imprimir_r1(Reportes.r1(rechazados))
+    Reportes.imprimir_r1(rechazados)
+    # Corrección de un error con imprimir. Apoyo IA(Claude)
   end
 
   @doc """
