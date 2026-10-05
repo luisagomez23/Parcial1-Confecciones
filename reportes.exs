@@ -323,6 +323,10 @@ defmodule Reportes do
   # R6. Mejor calidad (porcentaje de defectos ponderado por prendas)
   # ---------------------------------------------------------------
 
+  @doc """
+  Porcentaje de defectos ponderado por prendas (y promedio simple) de cada confeccionista
+  con al menos el mínimo de lotes válidos.
+  """
   def calidad_ponderada(lotes_validos) do
     lotes_validos
     |> Enum.group_by(fn lote -> lote.confeccionista end)
@@ -454,5 +458,48 @@ defmodule Reportes do
     Map.merge(produccion_a, produccion_b, fn _dia, prendas_a, prendas_b ->
       prendas_a + prendas_b
     end)
+  end
+
+  # Hecho con IA(Claude) Comprobante individual
+
+  @doc """
+  Busca la liquidación de un código. Devuelve `{:ok, liquidacion}` o
+  `{:error, :confeccionista_no_encontrado}`.
+  """
+  def buscar_liquidacion(liquidaciones, codigo) do
+    case Enum.find(liquidaciones, fn liq -> liq.codigo == codigo end) do
+      nil -> {:error, :confeccionista_no_encontrado}
+      liquidacion -> {:ok, liquidacion}
+    end
+  end
+
+  @doc "Imprime el comprobante de un confeccionista (solo los días con lotes válidos)."
+  def imprimir_comprobante(liquidaciones, codigo) do
+    case buscar_liquidacion(liquidaciones, codigo) do
+      {:ok, liq} ->
+        IO.puts("\n=== Comprobante de #{liq.nombre} (#{liq.codigo}) ===")
+
+        if map_size(liq.dias) == 0 do
+          IO.puts("  No registra lotes válidos.")
+        end
+
+        liq.dias
+        |> Enum.sort_by(fn {dia, _detalle} -> dia end)
+        |> Enum.each(fn {dia, detalle} ->
+          IO.puts(
+            "  Día #{dia}: #{detalle.prendas} prendas | " <>
+              "lotes #{Util.formatear_dinero(detalle.valor)} | " <>
+              "bonificación #{Util.formatear_dinero(detalle.bonificacion)}"
+          )
+        end)
+
+        IO.puts("  Suma de lotes:          #{Util.formatear_dinero(liq.bruto)}")
+        IO.puts("  Suma de bonificaciones: #{Util.formatear_dinero(liq.bonificaciones)}")
+        IO.puts("  Descuento por alquiler: #{Util.formatear_dinero(liq.alquiler)}")
+        IO.puts("  Neto a pagar:           #{Util.formatear_dinero(liq.neto)}")
+
+      {:error, :confeccionista_no_encontrado} ->
+        IO.puts("\nEl código \"#{codigo}\" no existe.")
+    end
   end
 end
