@@ -1,3 +1,5 @@
+# Parcial 1 - Programación III - Universidad del Quindío
+# Integrantes: Luisa Gómez, Juan Camilo Gordillo, Juan Esteban Mejia
 defmodule Validacion do
   @moduledoc """
   Validación de lotes.

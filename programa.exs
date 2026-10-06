@@ -8,7 +8,9 @@ defmodule Programa do
 
   @taller_aliado %{1 => 550, 2 => 620, 3 => 480, 5 => 710, 7 => 200}
 
-  @doc "Función principal del programa."
+  @doc """
+  Función principal del programa.
+  """
   def main do
     confeccionistas = Datos.confeccionistas()
     lineas = Datos.lineas()
@@ -36,7 +38,9 @@ defmodule Programa do
     pedir_comprobante(liquidaciones)
   end
 
-  @doc "Pide un lote adicional. Devuelve `[]` o una lista con el lote por agregar."
+  @doc """
+  Pide un lote adicional. Devuelve `[]` o una lista con el lote por agregar.
+  """
   def pedir_lote_adicional(por_codigo, por_id) do
     mensaje =
       "Ingrese un lote adicional (confeccionista;linea;dia;prendas;defectos)\n" <>

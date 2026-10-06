@@ -3,9 +3,11 @@
 
 defmodule Reportes do
 
+  #Parametros como atributos del modulo
   @dias_produccion 1..6
   @meta_diaria 600
   @minimo_lotes_calidad 3
+
 
   @motivos [
     :confeccionista_desconocido,
@@ -22,14 +24,18 @@ defmodule Reportes do
   # R1. Lotes rechazados
   # ---------------------------------------------------------------
 
-  @doc "Cuenta los lotes rechazados por cada motivo (incluye los motivos con cero)."
+  @doc """
+  Cuenta los lotes rechazados por cada motivo (incluye los motivos con cero).
+  """
   def conteo_por_motivo(rechazados) do
     frecuencias = Enum.frequencies_by(rechazados, fn {_lote, motivo} -> motivo end)
 
     for motivo <- @motivos, do: {motivo, Map.get(frecuencias, motivo, 0)}
   end
 
-  @doc "R1: imprime los lotes rechazados y la cantidad de rechazos por motivo."
+  @doc """
+  R1: imprime los lotes rechazados y la cantidad de rechazos por motivo.
+  """
   def imprimir_r1(rechazados) do
     IO.puts("\n=== R1. Lotes rechazados ===")
     imprimir_rechazados(rechazados)
@@ -83,7 +89,9 @@ defmodule Reportes do
     |> Enum.sort_by(fn linea -> linea.productividad end, :desc)
   end
 
-  @doc "R2: imprime prendas y productividad por línea."
+  @doc """
+  R2: imprime prendas y productividad por línea.
+  """
   def imprimir_r2(lineas, lotes_validos) do
     IO.puts("\n=== R2. Producción y productividad por línea ===")
 
@@ -107,21 +115,27 @@ defmodule Reportes do
   # R3. Producción diaria y meta
   # ---------------------------------------------------------------
 
-  @doc "Mapa dia => prendas producidas por el taller. Los días sin lotes válidos valen cero."
+  @doc """
+  Mapa dia => prendas producidas por el taller. Los días sin lotes válidos valen cero.
+  """
   def produccion_diaria(lotes_validos) do
     por_dia = Util.prendas_por(lotes_validos, fn lote -> lote.dia end)
 
     Map.new(@dias_produccion, fn dia -> {dia, Map.get(por_dia, dia, 0)} end)
   end
 
-  @doc "Indica si la meta se alcanzó todos los días y si se alcanzó al menos un día."
+  @doc """
+  Indica si la meta se alcanzó todos los días y si se alcanzó al menos un día.
+  """
   def resumen_meta(produccion) do
     cumplidas = Enum.map(produccion, fn {_dia, prendas} -> meta_alcanzada?(prendas) end)
 
     %{todos: Enum.all?(cumplidas), alguno: Enum.any?(cumplidas)}
   end
 
-  @doc "R3: imprime la producción de cada día y el cumplimiento de la meta."
+  @doc """
+  R3: imprime la producción de cada día y el cumplimiento de la meta.
+  """
   def imprimir_r3(lotes_validos) do
     produccion = produccion_diaria(lotes_validos)
 
@@ -177,7 +191,9 @@ defmodule Reportes do
   defp aplicar_limite(lista, nil), do: lista
   defp aplicar_limite(lista, limite), do: Enum.take(lista, limite)
 
-  @doc "Imprime el resultado de `ranking/2` con un título (para las llamadas de C.1 desde main)."
+  @doc """
+  Imprime el resultado de `ranking/2` con un título (para las llamadas de C.1 desde main).
+  """
   def imprimir_ranking(titulo, {:ok, liquidaciones}) do
     IO.puts("\n--- #{titulo} ---")
     IO.puts(encabezado_liquidacion())
@@ -192,7 +208,9 @@ defmodule Reportes do
     IO.puts("No se pudo generar el ranking: #{motivo}")
   end
 
-  @doc "R4: imprime la liquidación numerada, de mayor a menor pago neto."
+  @doc """
+  R4: imprime la liquidación numerada, de mayor a menor pago neto.
+  """
   def imprimir_r4(liquidaciones) do
     IO.puts("\n=== R4. Liquidación de confeccionistas ===")
     IO.puts(encabezado_liquidacion())
@@ -283,7 +301,9 @@ defmodule Reportes do
     end
   end
 
-  @doc "R5: imprime el líder de cada día y quién fue primero más veces."
+  @doc """
+  R5: imprime el líder de cada día y quién fue primero más veces.
+  """
   def imprimir_r5(lotes_validos, confeccionistas) do
     nombres = Util.nombres_por_codigo(confeccionistas)
     lideres = lideres_por_dia(lotes_validos)
@@ -346,7 +366,10 @@ defmodule Reportes do
     end)
   end
 
-  @doc "Los confeccionistas con menor porcentaje ponderado (todos si hay empate). Lista vacía si nadie cumple el mínimo."
+  @doc """
+  Los confeccionistas con menor porcentaje ponderado (todos si hay empate).
+  Lista vacía si nadie cumple el mínimo.
+  """
   def mejores_en_calidad(lotes_validos) do
     candidatos = calidad_ponderada(lotes_validos)
 
@@ -360,7 +383,9 @@ defmodule Reportes do
     end
   end
 
-  @doc "R6: imprime al confeccionista con mejor calidad."
+  @doc """
+  R6: imprime al confeccionista con mejor calidad.
+  """
   def imprimir_r6(lotes_validos, confeccionistas) do
     nombres = Util.nombres_por_codigo(confeccionistas)
 
@@ -397,7 +422,9 @@ defmodule Reportes do
     %{total: total, prendas: prendas, promedio: Util.dividir(total, prendas)}
   end
 
-  @doc "R7: imprime el total pagado y el costo promedio por prenda."
+  @doc """
+  R7: imprime el total pagado y el costo promedio por prenda.
+  """
   def imprimir_r7(liquidaciones, lotes_validos) do
     resumen = resumen_pago(liquidaciones, lotes_validos)
 
@@ -418,7 +445,9 @@ defmodule Reportes do
   # R8. Confeccionistas que trabajaron en todas las líneas
   # ---------------------------------------------------------------
 
-  @doc "Códigos de los confeccionistas con al menos un lote válido en cada línea."
+  @doc """
+  Códigos de los confeccionistas con al menos un lote válido en cada línea.
+  """
   def en_todas_las_lineas(lineas, lotes_validos) do
     ids_lineas = Enum.map(lineas, fn linea -> linea.id end)
 
@@ -431,7 +460,9 @@ defmodule Reportes do
     |> Enum.sort()
   end
 
-  @doc "R8: imprime quiénes trabajaron en todas las líneas."
+  @doc """
+  R8: imprime quiénes trabajaron en todas las líneas.
+  """
   def imprimir_r8(lineas, lotes_validos, confeccionistas) do
     nombres = Util.nombres_por_codigo(confeccionistas)
 
@@ -473,7 +504,9 @@ defmodule Reportes do
     end
   end
 
-  @doc "Imprime el comprobante de un confeccionista (solo los días con lotes válidos)."
+  @doc """
+  Imprime el comprobante de un confeccionista (solo los días con lotes válidos).
+  """
   def imprimir_comprobante(liquidaciones, codigo) do
     case buscar_liquidacion(liquidaciones, codigo) do
       {:ok, liq} ->

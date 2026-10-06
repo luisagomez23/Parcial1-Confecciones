@@ -1,3 +1,5 @@
+# Parcial 1 - Programación III - Universidad del Quindío
+# Integrantes: Luisa Gómez, Juan Camilo Gordillo, Juan Esteban Mejia
 defmodule Liquidacion do
   @moduledoc """
   Cálculo del valor de lotes, bonificaciones, alquiler y neto de cada confeccionista.

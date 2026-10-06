@@ -8,7 +8,7 @@ Integrantes: Luisa María Gómez Gómez, Juan Camilo Gordillo, Juan Esteban Meji
 
 ```bash
 elixirc datos.exs util.exs validacion.exs liquidacion.exs reportes.exs
-elixir programa.exs
+elixir programa.exs mediciones.exs
 ```
 
 ## Módulos

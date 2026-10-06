@@ -1,10 +1,14 @@
+# Parcial 1 - Programación III - Universidad del Quindío
+# Integrantes: Luisa Gómez, Juan Camilo Gordillo, Juan Esteban Mejia
 defmodule Datos do
   @moduledoc """
   Datos del taller de confección: 10 confeccionistas, 4 líneas y 90 lotes
   (80 válidos y 10 inválidos).
   """
 
-  @doc "Lista de confeccionistas."
+  @doc """
+  Lista de confeccionistas.
+  """
   def confeccionistas do
     [
       %{codigo: "C01", nombre: "María Elena Ríos", alquiler: true},
@@ -21,7 +25,9 @@ defmodule Datos do
     ]
   end
 
-  @doc "Lista de líneas de producción."
+  @doc """
+  Lista de líneas de producción.
+  """
   def lineas do
     [
       %{id: "L1", nombre: "Línea Norte", puestos: 6},
@@ -32,7 +38,9 @@ defmodule Datos do
     ]
   end
 
-  @doc "Lista de lotes registrados (válidos e inválidos)."
+  @doc """
+  Lista de lotes registrados (válidos e inválidos).
+  """
   def lotes do
     [
       %{confeccionista: "C01", linea: "L1", dia: 1, prendas: 70, defectos: 1.5},
